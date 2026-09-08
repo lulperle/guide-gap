@@ -1,0 +1,43 @@
+[project]
+name = "guide-gap"
+version = "0.1.0"
+description = "Finds which guide page is missing, and which one exists but nobody can find"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.35",
+    "numpy>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+# Kept out of `dev` because aws-cdk-lib pulls in jsii and a node runtime, and the
+# unit suite must stay installable and fast without them. `tests/test_infra.py`
+# skips itself when this extra is absent.
+infra = [
+    "aws-cdk-lib>=2.150",
+    "constructs>=10",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["guide_gap"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+# The infra directory is a CDK app rather than part of the package, so it is linted
+# but not type-checked as an import target.
+extend-exclude = ["infra/layer"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

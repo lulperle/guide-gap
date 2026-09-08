@@ -1,0 +1,23 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Embedding cache: regenerable, and a few megabytes of float arrays is not source.
+.cache/
+
+# Generated drafts. One example is committed under docs/ deliberately; the rest are
+# output, and committing them would make the repository look like it contains
+# reviewed guide pages when it does not.
+out/
+
+# CDK build output and the Lambda layer, both built by `make`.
+cdk.out/
+infra/layer/python/*
+!infra/layer/python/.gitkeep
+
+# Credentials, ever.
+.env
+*.pem
