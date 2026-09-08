@@ -1,0 +1,10 @@
+{
+  "app": "python3 infra/app.py",
+  "watch": { "exclude": ["**/.venv/**", "**/.cache/**", "out/**", "evals/results*.json"] },
+  "context": {
+    "region": "us-west-2",
+    "@aws-cdk/core:newStyleStackSynthesis": true,
+    "@aws-cdk/aws-iam:minimizePolicies": true,
+    "@aws-cdk/core:checkSecretUsage": true
+  }
+}

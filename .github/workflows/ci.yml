@@ -1,0 +1,69 @@
+name: ci
+
+# What runs here is the half that does not need AWS: the whole test suite, the
+# linter, and a CDK synth. The measured accuracy numbers in the README are *not*
+# reproduced by CI, because reproducing them costs Bedrock calls and would need
+# credentials in a public repository. The raw per-run artifacts are committed under
+# evals/ instead, so any number in the README can be recomputed from them.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # 3.12 is the floor the package declares and the Lambda runtime it deploys
+        # to; 3.14 is what it was developed on. Both, so neither one silently drifts.
+        python: ["3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Install
+        run: pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Test
+        # -p no:randomly is not needed and no network mock is installed: if a test
+        # here starts needing credentials, it fails, which is the intended alarm.
+        run: pytest -q
+
+  synth:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -e ".[dev,infra]"
+
+      - name: Build the Lambda layer
+        # Cross-platform wheels for the Lambda runtime. The layer has to exist for
+        # synth to succeed, because the stack points an asset at it.
+        run: make layer PIP=pip PY=python
+
+      - name: Synth
+        # No credentials: the stack takes its account and region from context, so
+        # the template resolves without an AWS call.
+        run: npx --yes aws-cdk@2 synth --context account=111122223333
+
+      - name: Template assertions
+        run: pytest tests/test_infra.py -q
