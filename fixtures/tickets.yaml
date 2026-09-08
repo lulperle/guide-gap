@@ -1,0 +1,193 @@
+# One batch of inbound questions, labelled before any model saw them.
+#
+# `expect_cause` is what the right answer is. `needs_human` is an input to the
+# classifier, not something it infers -- see guide_gap/coverage.py for why.
+#
+# The wording is deliberately not the wording of the guide. Real users do not
+# type the title of the page they need; they type the words they already have.
+# A fixture written in the guide's own vocabulary would make retrieval look far
+# better than it is and would hide the findability problem entirely.
+
+- id: t01
+  text: |
+    スマホを機種変更したのですが、ログインのときの6桁の番号を出すアプリが新しい端末に
+    入っていません。古い端末はもう返却してしまいました。どうすればログインできますか。
+  expect_cause: findability_gap
+  expect_page: mfa-setup
+  needs_human: false
+  note: ガイドに回復コードでの再登録手順がある。「機種変更」「6桁の番号」で探しても
+    「多要素認証」のページに辿り着かない。
+
+- id: t02
+  text: |
+    二要素認証の設定をやり直したいです。登録し直す手順が書かれた場所を教えてください。
+  expect_cause: findability_gap
+  expect_page: mfa-setup
+  needs_human: false
+
+- id: t03
+  text: |
+    課ごとの費用を表にまとめて決裁に添付したいのですが、画面をスクリーンショットで
+    貼る以外に方法はありますか。エクセルで扱える形で落とせると助かります。
+  expect_cause: findability_gap
+  expect_page: cost-report
+  needs_human: false
+  note: CSV エクスポートは既にある。利用者は「CSV」という語を使っていない。
+
+- id: t04
+  text: |
+    先月末に画面で見た金額と、今月届いた請求の金額が数万円ずれています。
+    どちらが正しいのでしょうか。
+  expect_cause: findability_gap
+  expect_page: cost-report
+  needs_human: false
+
+- id: t05
+  text: |
+    情報公開請求への対応で、いつまでの操作記録が残っているか確認する必要があります。
+    保存されている期間を教えてください。
+  expect_cause: findability_gap
+  expect_page: log-retention
+  needs_human: false
+
+- id: t06
+  text: |
+    半年分の操作履歴をまとめて提出したいのですが、ダウンロードしようとすると
+    途中で切れてしまいます。一括で取得する方法はありますか。
+  expect_cause: findability_gap
+  expect_page: log-retention
+  needs_human: false
+
+- id: t07
+  text: |
+    サーバを再起動しようとしたら「権限がありません」と表示されました。
+    誰に何を依頼すればよいのか分かりません。
+  expect_cause: findability_gap
+  expect_page: permission-model
+  needs_human: false
+  note: 依頼先（自団体の環境管理者）と確認画面がガイドに書かれている。依頼そのものは
+    利用者側で完結するので、これはサービスデスク案件ではない。
+
+- id: t08
+  text: |
+    今月中に環境を使い始めたいのですが、申請してからどのくらいで使えるように
+    なりますか。年度末なので急いでいます。
+  expect_cause: findability_gap
+  expect_page: account-request
+  needs_human: false
+
+- id: t09
+  text: |
+    VPNの開通通知は届いたのですが、庁内の端末から業務システムに繋がりません。
+    設定は申請したとおりに入れています。
+  expect_cause: findability_gap
+  expect_page: network-connection
+  needs_human: false
+
+- id: t10
+  text: |
+    担当者を1名だけ登録して申請したところ、受け付けられずに戻ってきました。
+    入力に不備はなかったと思うのですが、理由が分かりません。
+  expect_cause: findability_gap
+  expect_page: account-request
+  needs_human: false
+
+# --- 移行手順: 3件が同じことを聞いている。ガイドに該当ページがない。 ---
+
+- id: t11
+  text: |
+    現在オンプレミスで動いている住民税の système を、この環境へ移す予定です。
+    移行の手順や、事前に申請が必要なものをまとめた資料はありますか。
+  expect_cause: content_gap
+  needs_human: false
+  note: 原文に混入したタイポ（système）はそのまま。実際の問い合わせは綺麗ではなく、
+    前処理でこういう文字が落ちると再現しない不具合になる。
+
+- id: t12
+  text: |
+    他社のクラウドで稼働しているシステムを移設したいのですが、データの持ち込みに
+    上限や制限はありますか。回線を使うのか媒体で送るのかも知りたいです。
+  expect_cause: content_gap
+  needs_human: false
+
+- id: t13
+  text: |
+    既存環境からの移行にあたって、並行稼働の期間だけ二重に費用が発生すると思います。
+    その期間の扱いについて決まりはありますか。
+  expect_cause: content_gap
+  needs_human: false
+
+# --- タグ付け規則: 費用按分のページから参照されているのに、規則そのものがない。 ---
+
+- id: t14
+  text: |
+    費用の按分にタグを使うと説明を受けましたが、タグの名前を何にすればよいのかが
+    どこにも書かれていません。決められた付け方はありますか。
+  expect_cause: content_gap
+  needs_human: false
+  note: cost-report がタグに言及しているが規則は書いていない。隣接ページはあるが
+    答えはない、という content_gap の典型。
+
+- id: t15
+  text: |
+    リソースに付けるラベルの命名規則について、団体側で自由に決めてよいのか、
+    全体で統一されたものがあるのか教えてください。
+  expect_cause: content_gap
+  needs_human: false
+
+- id: t16
+  text: |
+    既に作ってしまったサーバにタグが付いていません。後から付けた場合、
+    過去の月の集計にも反映されますか。
+  expect_cause: content_gap
+  needs_human: false
+
+# --- 単発の content gap。クラスタにならないので下書きは作られない。 ---
+
+- id: t17
+  text: |
+    年度が替わって予算コードが変わりました。既存の環境に紐づいている予算コードを
+    切り替える手順はどこにありますか。
+  expect_cause: content_gap
+  needs_human: false
+  note: 1件だけの論点。ページ化の対象外になることを確認するための行。
+
+# --- 文書では解決できないもの。 ---
+
+- id: t18
+  text: |
+    私のアカウントに構築担当者の権限を付けてください。所属は情報政策課、
+    職員番号は下記のとおりです。
+  expect_cause: not_deflectable
+  needs_human: true
+  note: 権限ページの類似度は高く出る。それでもページは権限を付与できない。
+
+- id: t19
+  text: |
+    住民向けの申請受付システムが15時ごろから応答しません。窓口を止めています。
+    至急対応をお願いします。
+  expect_cause: not_deflectable
+  needs_human: true
+
+- id: t20
+  text: |
+    認証アプリを入れた端末を紛失し、回復コードを記載した書類も見つかりません。
+    多要素認証の解除をお願いします。本人確認に必要な書類を送ります。
+  expect_cause: not_deflectable
+  needs_human: true
+  note: t02 とほぼ同じ話題で、片方は文書で解決し片方は解決しない。needs_human を
+    類似度から推定していたら、この2件は同じ扱いになる。
+
+- id: t21
+  text: |
+    4月分の請求で、予算コードの指定を誤って別の課に付け替わっていました。
+    遡って修正していただけますか。
+  expect_cause: not_deflectable
+  needs_human: true
+
+- id: t22
+  text: |
+    検証区分で払い出した環境を本番区分に変更したいです。作り直す時間がないため、
+    例外として認めていただけないでしょうか。
+  expect_cause: not_deflectable
+  needs_human: true
