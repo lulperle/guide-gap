@@ -1,0 +1,296 @@
+{
+  "mode": "entailment",
+  "embed_model": "amazon.titan-embed-text-v2:0",
+  "draft_model": "us.anthropic.claude-sonnet-5",
+  "repeats": 3,
+  "accuracy_min": 0.9090909090909091,
+  "accuracy_max": 0.9545454545454546,
+  "accuracy_mean": 0.9393939393939394,
+  "always_wrong": [
+    "t08"
+  ],
+  "sometimes_wrong": [
+    "t10"
+  ],
+  "wrong_counts": {
+    "t08": 3,
+    "t10": 1
+  },
+  "hid_a_real_gap_total": 0,
+  "truncated_total": 3,
+  "unparsed_total": 2,
+  "runs": [
+    {
+      "run": 1,
+      "seconds": 159.1,
+      "accuracy": 0.9545454545454546,
+      "correct": 21,
+      "total": 22,
+      "missed_existing_page": 1,
+      "hid_a_real_gap": 0,
+      "wrong": [
+        "t08"
+      ],
+      "predictions": {
+        "t01": "findability_gap",
+        "t02": "findability_gap",
+        "t03": "findability_gap",
+        "t04": "findability_gap",
+        "t05": "findability_gap",
+        "t06": "findability_gap",
+        "t07": "findability_gap",
+        "t08": "content_gap",
+        "t09": "findability_gap",
+        "t10": "findability_gap",
+        "t11": "content_gap",
+        "t12": "content_gap",
+        "t13": "content_gap",
+        "t14": "content_gap",
+        "t15": "content_gap",
+        "t16": "content_gap",
+        "t17": "content_gap",
+        "t18": "not_deflectable",
+        "t19": "not_deflectable",
+        "t20": "not_deflectable",
+        "t21": "not_deflectable",
+        "t22": "not_deflectable"
+      },
+      "decided_on": {
+        "t01": "mfa-setup",
+        "t02": "mfa-setup",
+        "t03": "cost-report",
+        "t04": "cost-report",
+        "t05": "log-retention",
+        "t06": "log-retention",
+        "t07": "permission-model",
+        "t08": null,
+        "t09": "network-connection",
+        "t10": "account-request",
+        "t11": null,
+        "t12": null,
+        "t13": null,
+        "t14": null,
+        "t15": null,
+        "t16": null,
+        "t17": null,
+        "t18": null,
+        "t19": null,
+        "t20": null,
+        "t21": null,
+        "t22": null
+      },
+      "clusters": [
+        [
+          "t11",
+          "t12",
+          "t13"
+        ],
+        [
+          "t14",
+          "t15",
+          "t16"
+        ],
+        [
+          "t08"
+        ],
+        [
+          "t17"
+        ]
+      ],
+      "pages_proposed": 2,
+      "tickets_behind_proposals": 6,
+      "drafts": [],
+      "coverage_checks": 57,
+      "pair_checks": 9,
+      "unparsed": 0,
+      "truncated": 0,
+      "input_tokens": 42482,
+      "output_tokens": 1840,
+      "errors": []
+    },
+    {
+      "run": 2,
+      "seconds": 148.1,
+      "accuracy": 0.9545454545454546,
+      "correct": 21,
+      "total": 22,
+      "missed_existing_page": 1,
+      "hid_a_real_gap": 0,
+      "wrong": [
+        "t08"
+      ],
+      "predictions": {
+        "t01": "findability_gap",
+        "t02": "findability_gap",
+        "t03": "findability_gap",
+        "t04": "findability_gap",
+        "t05": "findability_gap",
+        "t06": "findability_gap",
+        "t07": "findability_gap",
+        "t08": "content_gap",
+        "t09": "findability_gap",
+        "t10": "findability_gap",
+        "t11": "content_gap",
+        "t12": "content_gap",
+        "t13": "content_gap",
+        "t14": "content_gap",
+        "t15": "content_gap",
+        "t16": "content_gap",
+        "t17": "content_gap",
+        "t18": "not_deflectable",
+        "t19": "not_deflectable",
+        "t20": "not_deflectable",
+        "t21": "not_deflectable",
+        "t22": "not_deflectable"
+      },
+      "decided_on": {
+        "t01": "mfa-setup",
+        "t02": "mfa-setup",
+        "t03": "cost-report",
+        "t04": "cost-report",
+        "t05": "log-retention",
+        "t06": "log-retention",
+        "t07": "permission-model",
+        "t08": null,
+        "t09": "network-connection",
+        "t10": "account-request",
+        "t11": null,
+        "t12": null,
+        "t13": null,
+        "t14": null,
+        "t15": null,
+        "t16": null,
+        "t17": null,
+        "t18": null,
+        "t19": null,
+        "t20": null,
+        "t21": null,
+        "t22": null
+      },
+      "clusters": [
+        [
+          "t11",
+          "t12",
+          "t13"
+        ],
+        [
+          "t14",
+          "t15"
+        ],
+        [
+          "t08"
+        ],
+        [
+          "t16"
+        ],
+        [
+          "t17"
+        ]
+      ],
+      "pages_proposed": 2,
+      "tickets_behind_proposals": 5,
+      "drafts": [],
+      "coverage_checks": 55,
+      "pair_checks": 9,
+      "unparsed": 1,
+      "truncated": 1,
+      "input_tokens": 41066,
+      "output_tokens": 1777,
+      "errors": []
+    },
+    {
+      "run": 3,
+      "seconds": 163.5,
+      "accuracy": 0.9090909090909091,
+      "correct": 20,
+      "total": 22,
+      "missed_existing_page": 2,
+      "hid_a_real_gap": 0,
+      "wrong": [
+        "t08",
+        "t10"
+      ],
+      "predictions": {
+        "t01": "findability_gap",
+        "t02": "findability_gap",
+        "t03": "findability_gap",
+        "t04": "findability_gap",
+        "t05": "findability_gap",
+        "t06": "findability_gap",
+        "t07": "findability_gap",
+        "t08": "content_gap",
+        "t09": "findability_gap",
+        "t10": "content_gap",
+        "t11": "content_gap",
+        "t12": "content_gap",
+        "t13": "content_gap",
+        "t14": "content_gap",
+        "t15": "content_gap",
+        "t16": "content_gap",
+        "t17": "content_gap",
+        "t18": "not_deflectable",
+        "t19": "not_deflectable",
+        "t20": "not_deflectable",
+        "t21": "not_deflectable",
+        "t22": "not_deflectable"
+      },
+      "decided_on": {
+        "t01": "mfa-setup",
+        "t02": "mfa-setup",
+        "t03": "cost-report",
+        "t04": "cost-report",
+        "t05": "log-retention",
+        "t06": "log-retention",
+        "t07": "permission-model",
+        "t08": null,
+        "t09": "network-connection",
+        "t10": null,
+        "t11": null,
+        "t12": null,
+        "t13": null,
+        "t14": null,
+        "t15": null,
+        "t16": null,
+        "t17": null,
+        "t18": null,
+        "t19": null,
+        "t20": null,
+        "t21": null,
+        "t22": null
+      },
+      "clusters": [
+        [
+          "t11",
+          "t12",
+          "t13"
+        ],
+        [
+          "t14",
+          "t16"
+        ],
+        [
+          "t08"
+        ],
+        [
+          "t10"
+        ],
+        [
+          "t15"
+        ],
+        [
+          "t17"
+        ]
+      ],
+      "pages_proposed": 2,
+      "tickets_behind_proposals": 5,
+      "drafts": [],
+      "coverage_checks": 63,
+      "pair_checks": 9,
+      "unparsed": 1,
+      "truncated": 2,
+      "input_tokens": 46690,
+      "output_tokens": 1586,
+      "errors": []
+    }
+  ]
+}
