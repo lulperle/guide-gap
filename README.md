@@ -1,5 +1,7 @@
 # guide-gap
 
+**English** | [日本語](README.ja.md)
+
 Reads a batch of support tickets and a guide, and answers one question per ticket:
 **is the page missing, or does it exist and nobody could find it?**
 
