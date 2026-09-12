@@ -134,7 +134,7 @@ Two smaller ones, both worth knowing before starting:
 ### Two found by rendering the output for a person
 
 Both of these survived a green test suite, and both were caught while building
-[guide-review](https://github.com/milkwhite-lul/guide-review), a review screen for
+[guide-review](https://github.com/lulperle/guide-review), a review screen for
 these proposals. They are the argument for putting machine output in front of a reader
 before trusting the numbers about it.
 
@@ -228,7 +228,7 @@ the test suite runs in CI with no credentials at all.
   that makes the stage safe to automate, and `Draft.well_formed` fails the draft if
   that heading is absent. `evals/export_review.py` writes one pass out as a review
   bundle — every verdict with the passage it was made about — for
-  [guide-review](https://github.com/milkwhite-lul/guide-review), which is where a
+  [guide-review](https://github.com/lulperle/guide-review), which is where a
   person accepts or rejects them.
 
 ## Licence
