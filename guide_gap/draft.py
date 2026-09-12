@@ -41,9 +41,12 @@ SYSTEM = """あなたは行政向けクラウドサービスの利用ガイド�
 - タイトルは、利用者が検索するときに打つ言葉にすること。制度上の正式名称ではなく、
   問い合わせに実際に出てきた言葉を優先すること。
 
-出力形式（この見出しをそのまま使うこと）:
+出力形式:
 
-# タイトル
+1行目は「# 」で始め、そのページのタイトルを書くこと。利用者が検索するときに打つ
+言葉にすること。「タイトル」という語をそのまま書かないでください。
+
+そのあとに、次の3つの見出しをこの表記のまま、この順で使うこと:
 
 ## どんなときに読むページか
 
@@ -69,6 +72,15 @@ NO_PAGE = "（関連するページは見つかりませんでした）"
 # procedure shows up.
 REQUIRED_HEADINGS = ("## どんなときに読むページか", "## 手順", "## 確認が必要な点")
 
+# Titles that mean the model copied the output template instead of filling it in.
+#
+# This is here because it happened. The template line used to read "# タイトル" under
+# an instruction to use the headings exactly as given, so the model did precisely
+# that -- emitted "# タイトル" and put the real title on the line below. The prompt is
+# fixed, but a placeholder title is the specific shape prompt drift takes here, and
+# the point of `well_formed` is to catch drift rather than to trust that it stopped.
+PLACEHOLDER_TITLES = ("タイトル", "(no title)")
+
 
 @dataclass
 class Draft:
@@ -81,21 +93,53 @@ class Draft:
 
     @property
     def open_questions(self) -> list[str]:
-        """The bullets under 確認が必要な点.
+        """The bullets under 確認が必要な点, each joined back into one sentence.
 
         Extracted rather than left in prose because the count is a reviewable
         number: a batch of drafts averaging zero open questions is not a batch of
         confident drafts, it is a prompt that stopped working.
+
+        The continuation handling is a fix, not a refinement. This used to keep only
+        the lines that *start* with a bullet, and the drafts wrap at around forty
+        full-width characters, so nearly every item ran onto a second line and
+        arrived cut off mid-clause -- 「命名規則があるのかどうかは、」 and nothing after
+        it. The bug survived because the thing this property is used for is the
+        count, and the count was right.
         """
-        section = _section(self.body, "## 確認が必要な点")
-        return [
-            line.lstrip("-*・ 　").strip()
-            for line in section.splitlines()
-            if line.strip().startswith(("-", "*", "・"))
-        ]
+        items: list[str] = []
+        open_item = False
+        for line in _section(self.body, "## 確認が必要な点").splitlines():
+            stripped = line.strip()
+            if not stripped:
+                # A blank line closes the item. Without this, prose following the
+                # list gets appended to the last question.
+                open_item = False
+                continue
+            if stripped.startswith(("-", "*", "・")):
+                items.append(stripped.lstrip("-*・ 　").strip())
+                open_item = True
+            elif open_item:
+                # A continuation, indented or not. Indentation is not required here
+                # because the model does not reliably supply it: one run wrapped
+                # these lines with two spaces and the next run wrapped them flush
+                # left. Lazy continuation is also what CommonMark does, so the
+                # looser rule is the more standard one as well. Joined without a
+                # separator -- these are Japanese lines broken for width, and a
+                # space between them reads as a typo mid-sentence.
+                items[-1] += stripped
+        return items
 
     @property
     def well_formed(self) -> bool:
+        """Whether the draft has the shape the prompt asked for.
+
+        Includes the title, not just the headings. A draft can carry all three
+        required headings and still be the output template echoed back -- see
+        `PLACEHOLDER_TITLES` -- and that reads as a finished page everywhere it is
+        displayed.
+        """
+        if self.title.strip() in PLACEHOLDER_TITLES:
+            return False
         return all(h in self.body for h in REQUIRED_HEADINGS)
 
 

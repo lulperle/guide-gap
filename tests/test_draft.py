@@ -40,6 +40,76 @@ def test_open_questions_are_extracted_as_a_countable_list():
     assert draft.open_questions[0].startswith("命名規則")
 
 
+def test_an_open_question_wrapped_onto_a_second_line_is_kept_whole():
+    """Regression. The extractor kept only lines that *begin* with a bullet, and the
+    drafts wrap at around forty full-width characters, so nearly every real item ran
+    onto a second line and arrived cut off mid-clause. It survived because the thing
+    this property is used for is the count, and the count was right."""
+    wrapped = """# t
+
+## 確認が必要な点
+
+- タグの名前について、決められた命名規則があるのかどうかは、
+  既存ガイドには記載がありません。
+- 文字数制限も不明です。
+"""
+    questions = Draft(["t1"], "t", wrapped, None).open_questions
+    assert len(questions) == 2
+    assert questions[0] == (
+        "タグの名前について、決められた命名規則があるのかどうかは、既存ガイドには記載がありません。"
+    )
+    # Joined without a separator: these are Japanese lines broken for width, and a
+    # space between them reads as a typo in the middle of a sentence.
+    assert " " not in questions[0]
+
+
+def test_a_continuation_is_joined_whether_or_not_it_is_indented():
+    """Indentation cannot be required, because the model does not reliably supply
+    it: one run wrapped these lines with two spaces and the next run wrapped them
+    flush left. Lazy continuation is what CommonMark does anyway."""
+    flush_left = """# t
+
+## 確認が必要な点
+
+- タグの名前について、決められた命名規則があるのかどうかは、
+既存ガイドには記載がありません。
+"""
+    assert Draft(["t1"], "t", flush_left, None).open_questions == [
+        "タグの名前について、決められた命名規則があるのかどうかは、既存ガイドには記載がありません。"
+    ]
+
+
+def test_a_blank_line_closes_the_item_so_following_prose_is_not_absorbed():
+    """The boundary that keeps lazy continuation from swallowing the rest of the
+    section: a sentence the model did not mark as a question must not become one."""
+    body = """# t
+
+## 確認が必要な点
+
+- 命名規則は不明です。
+
+なお、以上は暫定です。
+"""
+    assert Draft(["t1"], "t", body, None).open_questions == ["命名規則は不明です。"]
+
+
+def test_a_draft_that_echoed_the_template_title_is_not_well_formed():
+    """Regression. The output template read "# タイトル" under an instruction to use
+    the headings exactly as given, so the model did exactly that -- emitted
+    "# タイトル" and put the real title on the line below. Every heading was present,
+    so the draft passed as well formed and displayed as a finished page."""
+    echoed = WELL_FORMED.replace("# タグの名前は何にすればいい？", "# タイトル")
+    draft = Draft(["t1"], "タイトル", echoed, None)
+    assert not draft.well_formed
+    # The headings really are all there; the title is the only thing wrong, which is
+    # why the old check missed it.
+    assert all(h in echoed for h in ("## どんなときに読むページか", "## 手順", "## 確認が必要な点"))
+
+
+def test_a_missing_title_is_not_well_formed_either():
+    assert not Draft(["t1"], "(no title)", "本文だけ", None).well_formed
+
+
 def test_well_formed_requires_the_uncertainty_heading():
     draft = Draft(["t1"], "t", WELL_FORMED, None)
     assert draft.well_formed

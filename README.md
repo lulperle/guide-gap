@@ -131,6 +131,31 @@ Two smaller ones, both worth knowing before starting:
   gap, recorded zero errors, and looked like a finding. `entail.answers()` now
   raises on an empty passage rather than asking about it.
 
+### Two found by rendering the output for a person
+
+Both of these survived a green test suite, and both were caught while building
+[guide-review](https://github.com/milkwhite-lul/guide-review), a review screen for
+these proposals. They are the argument for putting machine output in front of a reader
+before trusting the numbers about it.
+
+- **`Draft.open_questions` was truncating every wrapped item.** It kept only lines
+  *beginning* with a bullet, and the drafts wrap at around forty full-width
+  characters, so a caveat arrived as 「命名規則があるのかどうかは、」 and nothing after it.
+  It went unnoticed because the property is used for its *count*, and the count was
+  right — the number of open questions per draft, the figure this project reports as
+  evidence that the drafting stage is safe, was correct while the questions themselves
+  were cut in half. The first fix required the continuation line to be indented; the
+  next run wrapped flush left instead and broke it again, so the rule is now
+  CommonMark lazy continuation, with a blank line closing the item.
+- **The draft title came out as the literal string 「タイトル」.** The cause was the
+  drafting prompt: its output template showed `# タイトル` under an instruction to use
+  the headings exactly as written, so the model did precisely that and put the real
+  title on the line below. `well_formed` returned `True`, because all three required
+  headings were present and the title was never checked. Both the prompt and the check
+  are fixed — see `PLACEHOLDER_TITLES` — because a placeholder title is the specific
+  shape prompt drift takes here, and `well_formed` exists to catch drift rather than
+  to assume it stopped.
+
 ### What is still wrong
 
 - **t08 fails every run.** It is a retrieval miss, not a judgement one: the section
@@ -153,8 +178,11 @@ Two smaller ones, both worth knowing before starting:
 
 ## Cost of one pass
 
-Measured, not estimated: 55–63 coverage checks, 9 pair checks, 2 drafts, ~41–47k
-input tokens, ~1.6–1.8k output tokens, 148–164 seconds. Embeddings are cached in
+Measured, not estimated, across five passes: 55–63 coverage checks, 8–10 pair checks,
+2 drafts, ~41–47k input tokens, 1.6–4.6k output tokens, 148–165 seconds. The output
+spread is 確認が必要な点 — a run where the drafts admit six things each costs roughly
+double one where they admit three, which is the correct direction for that cost to
+run. Embeddings are cached in
 `.cache/embeddings.json`, so the deterministic half of the pipeline re-runs for free
 and only the judgement calls cost anything.
 
@@ -198,7 +226,10 @@ the test suite runs in CI with no credentials at all.
   drafting prompt does with something it does not know: it lists the missing tag
   naming rules under 確認が必要な点 rather than inventing them. That is the property
   that makes the stage safe to automate, and `Draft.well_formed` fails the draft if
-  that heading is absent.
+  that heading is absent. `evals/export_review.py` writes one pass out as a review
+  bundle — every verdict with the passage it was made about — for
+  [guide-review](https://github.com/milkwhite-lul/guide-review), which is where a
+  person accepts or rejects them.
 
 ## Licence
 
