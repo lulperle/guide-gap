@@ -1,5 +1,7 @@
 # infra
 
+**English** | [日本語](README.ja.md)
+
 CDK stack for running the analysis weekly. **This has never been deployed.** It
 synthesises, and `tests/test_infra.py` asserts on the resulting template, but no
 resources exist in any account and no numbers anywhere in this repository came from

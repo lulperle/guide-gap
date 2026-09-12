@@ -22,7 +22,7 @@ AWS 上に構築: boto3 経由の Bedrock（検索は Titan Text Embeddings V2�
 
 ```bash
 python -m venv .venv && make install
-make test                    # 79 tests、認証情報なし、約4秒
+make test                    # 84 tests、認証情報なし、約5秒
 make analyse                 # Bedrock に対して1パス、out/drafts/ に書き出す
 make eval                    # 3回繰り返し、ラベルに対して採点
 make eval-baseline           # 類似度閾値のベースライン、モデル呼び出しなし
@@ -119,7 +119,7 @@ docs/           生成された下書き1本を無編集で、証拠として
 
 ## 主張していないこと
 
-- CDK スタックは**一度もデプロイしていない**。synth は通り、`tests/test_infra.py` がテンプレートに対して assert する。どのアカウントにもリソースは存在しない。実際のデプロイに何が足りないかは [`infra/README.md`](infra/README.md) 参照（インターフェースエンドポイント付きの VPC、カスタマー管理キー、チケットのエクスポート連携）。
+- CDK スタックは**一度もデプロイしていない**。synth は通り、`tests/test_infra.py` がテンプレートに対して assert する。どのアカウントにもリソースは存在しない。実際のデプロイに何が足りないかは [`infra/README.ja.md`](infra/README.ja.md) 参照（インターフェースエンドポイント付きの VPC、カスタマー管理キー、チケットのエクスポート連携）。
 - 自己解決率の改善は主張していない。これは**穴がどこにあるか**を測って候補ページを下書きするもので、それを公開したらチケットが減るかは、実物のドキュメントと実物のトラフィックに対する前後比較であり、それはやっていない。
 - 生成された下書きは未レビューの機械出力である。1本を [`docs/example-draft.md`](docs/example-draft.md) に commit してあるのは、下書きプロンプトが**知らないこと**に対して何をするかを示すためにほかならない: タグの命名規則が分からないとき、それを捏造せずに「確認が必要な点」の下に列挙する。それがこの工程を自動化しても安全である理由の性質であり、`Draft.well_formed` はその見出しが無い下書きを失敗させる。`evals/export_review.py` は1パスをレビュー用の bundle として書き出す — すべての判定を、それが下された箇所と一緒に — 宛先は [guide-review](https://github.com/lulperle/guide-review) で、そこで人が受理・却下する。
 

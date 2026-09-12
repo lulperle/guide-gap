@@ -31,7 +31,7 @@ framework -- this is one scheduled pass over a batch, and an agent that cannot s
 
 ```bash
 python -m venv .venv && make install
-make test                    # 79 tests, no credentials, ~4s
+make test                    # 84 tests, no credentials, ~5s
 make analyse                 # one pass against Bedrock, writes out/drafts/
 make eval                    # 3 repeats, scored against the labels
 make eval-baseline           # the similarity-threshold baseline, no model calls
